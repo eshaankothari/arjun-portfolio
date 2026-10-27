@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arjun Kothari</title>
+<style>
+  :root {
+    --paper: #f6f5f1;
+    --ink: #15233d;
+    --soft: #5e6b80;
+    --hair: rgba(21, 35, 61, 0.14);
+    --draw: rgba(21, 35, 61, 0.18);
+    --dash: rgba(44, 86, 148, 0.3);
+    --fill: #e9e8e3;
+    --mono: ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); }
+
+  /* soft patches of grid paper that fade out, behind the header and the contact area */
+  header::before, .contact::before {
+    content: ""; position: absolute; z-index: -1; pointer-events: none;
+    background-image: linear-gradient(rgba(21, 35, 61, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(21, 35, 61, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  header::before { top: 0; right: -32px; width: 60%; height: 100%; -webkit-mask-image: radial-gradient(ellipse at 75% 30%, #000, transparent 70%); mask-image: radial-gradient(ellipse at 75% 30%, #000, transparent 70%); }
+  .contact { position: relative; }
+  .contact::before { top: -120px; right: -32px; width: 55%; height: calc(100% + 160px); -webkit-mask-image: radial-gradient(ellipse at 70% 40%, #000, transparent 70%); mask-image: radial-gradient(ellipse at 70% 40%, #000, transparent 70%); }
+  body {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 32px;
+    color: var(--ink);
+    font: 16px/1.6 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    overflow-x: clip;
+  }
+  a { color: inherit; text-underline-offset: 4px; text-decoration-color: var(--hair); }
+  a:hover { text-decoration-color: var(--ink); }
+  img { display: block; max-width: 100%; }
+  .small { font: 12px/1.5 var(--mono); color: var(--soft); }
+
+  /* placeholder box until a real image is added */
+  .box { display: grid; place-items: center; background: var(--fill); font: 11px var(--mono); color: var(--soft); }
+
+  /* faint background drawings */
+  .drawing { position: absolute; pointer-events: none; color: var(--draw); }
+  header { position: relative; }
+  header > :not(.drawing) { position: relative; }
+
+
+  /* header */
+  header { padding: 96px 0 0; }
+  /* sits in the top-right corner and stops above the line under the name */
+  .lines { top: 0; right: 0; width: min(320px, 28vw); }
+  h1 { margin: 0; font-size: clamp(44px, 7vw, 84px); font-weight: 500; line-height: 0.98; letter-spacing: -0.04em; }
+  .meta {
+    display: grid; grid-template-columns: 1fr minmax(0, 380px) auto; gap: 48px; align-items: start;
+    margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--hair);
+  }
+  .north { width: 22px; height: 32px; color: #2c5694; }
+
+  /* nav drawn like a subway strip map */
+  nav ol { display: flex; justify-content: space-between; margin: 4px 0 0; padding: 0; list-style: none; background: linear-gradient(var(--ink), var(--ink)) 7px 6px / calc(100% - 14px) 2px no-repeat; }
+  nav a { display: flex; flex-direction: column; gap: 8px; text-decoration: none; }
+  nav li:nth-child(2) a { align-items: center; }
+  nav li:last-child a { align-items: flex-end; }
+  nav a::before { content: ""; width: 14px; height: 14px; border: 2px solid var(--ink); border-radius: 50%; background: var(--paper); box-sizing: border-box; }
+  nav a:hover::before { background: var(--ink); }
+
+  /* about, with drafting construction lines around the portrait */
+  .about { display: grid; grid-template-columns: 220px 1fr; gap: 40px; margin-top: 80px; }
+  .portrait { position: relative; }
+  .portrait .box, .portrait img { aspect-ratio: 4 / 5; width: 100%; object-fit: cover; }
+  .portrait::before { content: ""; position: absolute; top: 0; left: -24px; right: -24px; border-top: 1px dashed var(--dash); }
+  .portrait::after { content: ""; position: absolute; left: 0; top: -40px; bottom: -40px; border-left: 1px dashed var(--dash); }
+  .about p { margin: 0 0 24px; max-width: 36ch; font-size: clamp(18px, 2vw, 22px); line-height: 1.4; letter-spacing: -0.01em; }
+  .links { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+
+  /* dimension line under the name */
+  .name { display: inline-block; }
+  .dim { display: block; height: 11px; margin-top: 10px; border-left: 1px solid var(--dash); border-right: 1px solid var(--dash); background: linear-gradient(var(--dash), var(--dash)) 0 5px / 100% 1px no-repeat; }
+
+  /* grid bubbles at the end of section rules, like column markers on a plan */
+  h2 { display: flex; justify-content: space-between; align-items: flex-end; }
+  .bubble { display: inline-grid; place-items: center; width: 26px; height: 26px; border: 1px solid var(--dash); border-radius: 50%; font: 11px var(--mono); color: #2c5694; letter-spacing: 0; }
+
+
+  /* sections */
+  h2 { margin: 104px 0 0; padding-bottom: 16px; border-bottom: 1px solid var(--ink); font-size: clamp(28px, 3.2vw, 36px); font-weight: 500; letter-spacing: -0.03em; line-height: 1; }
+  .key { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 16px 0 0; }
+  .key > span { white-space: nowrap; }
+
+  /* letter bullets, like subway route signs */
+  .bullet { display: inline-block; width: 18px; height: 18px; margin-right: 8px; border-radius: 50%; background: var(--ink); color: var(--paper); font: bold 10px/18px Helvetica, Arial, sans-serif; text-align: center; vertical-align: 1px; }
+
+  /* each list is a route line, every project is a stop */
+  .route { margin: 16px 0 0 7px; padding: 0 0 0 33px; list-style: none; border-left: 2px solid var(--ink); }
+  .route > li { position: relative; border-bottom: 1px solid var(--hair); }
+  .route > li::before { content: ""; position: absolute; left: -42px; top: 44px; width: 16px; height: 16px; border: 2px solid var(--ink); border-radius: 50%; background: var(--paper); box-sizing: border-box; }
+  .route > li:has(details[open])::before { background: var(--ink); }
+  summary { display: grid; grid-template-columns: 128px 1fr 150px 64px; gap: 24px; align-items: center; padding: 16px 0; cursor: pointer; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary .box, summary img { width: 128px; aspect-ratio: 4 / 3; object-fit: cover; }
+  /* thumbnails mounted like prints: thin white mat and a hairline edge */
+  summary img { padding: 5px; background: #fff; outline: 1px solid var(--hair); }
+  summary b { display: block; font-size: 19px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.25; }
+  summary:hover b { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  summary .desc { color: var(--soft); }
+  .year { text-align: right; }
+
+  details > div { padding: 4px 0 32px 152px; }
+  details p { margin: 0 0 18px; max-width: 56ch; font-size: 17px; }
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0 0 18px; padding-top: 12px; border-top: 1px solid var(--hair); }
+  .facts dd { margin: 4px 0 0; }
+  .pics { display: flex; gap: 16px; overflow-x: auto; padding: 8px 0; }
+  .pics > * { flex: none; margin: 0; }
+  .pics figcaption { margin-top: 8px; max-width: 420px; }
+  .pics .box, .pics img { height: 260px; width: auto; }
+  .pics .box { width: 340px; }
+
+  /* contact */
+  /* tracks ending at a bumper, on their own row above contact */
+  .terminal { display: block; width: min(480px, 100%); margin: 112px 0 0 auto; color: var(--draw); }
+  .contact { margin-top: 24px; }
+  .email { font-size: clamp(28px, 4.5vw, 52px); font-weight: 500; letter-spacing: -0.04em; text-decoration: none; }
+  .email:hover { text-decoration: underline; text-decoration-thickness: 1px; }
+  .contact .links { margin-top: 20px; }
+
+  footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 80px; padding: 16px 0 32px; border-top: 1px solid var(--hair); }
+
+  @media (max-width: 760px) {
+    body { padding: 0 20px; }
+    header { padding-top: 120px; }
+    .lines { width: 120px; }
+    .meta { grid-template-columns: 1fr auto; gap: 24px 16px; }
+    nav { grid-column: 1 / -1; grid-row: 2; }
+    .about { grid-template-columns: 1fr; gap: 28px; margin-top: 56px; }
+    .portrait { width: 55%; }
+    h2 { margin-top: 80px; }
+    .route { padding-left: 23px; margin-left: 5px; }
+    .route > li::before { left: -31px; top: 34px; width: 12px; height: 12px; }
+    summary { grid-template-columns: 80px 1fr; gap: 16px; padding: 14px 0; }
+    summary .box, summary img { width: 80px; }
+    summary b { font-size: 17px; }
+    summary .place, .year { display: none; }
+    details > div { padding-left: 0; }
+    .facts { grid-template-columns: repeat(2, 1fr); row-gap: 12px; }
+    .pics .box, .pics img { height: 200px; }
+    .pics .box { width: 260px; }
+    .terminal { margin-top: 80px; }
+  }
+</style>
+</head>
+<body>
+
+
+
+<header>
+  <svg class="drawing lines" viewBox="0 0 360 300" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round" aria-hidden="true">
+    <path d="M150 0 V90 L290 230 V300 M162 0 V85 L302 225 V300 M174 0 V80 L314 220 V300"/>
+    <path d="M146 20 H134 M237 143 L245 135 M318 270 H330" stroke-width="4"/>
+    <rect x="138" y="36" width="48" height="20" rx="10" fill="var(--paper)" stroke-width="3"/>
+    <rect x="278" y="250" width="48" height="20" rx="10" fill="var(--paper)" stroke-width="3"/>
+  </svg>
+  <div class="name">
+    <h1>Arjun<br>Kothari</h1>
+    <span class="dim" aria-hidden="true"></span>
+  </div>
+  <div class="meta">
+    <span class="small">[Discipline line]</span>
+    <nav aria-label="Sections">
+      <ol class="small">
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ol>
+    </nav>
+    <svg class="north" viewBox="0 0 22 32" aria-hidden="true">
+      <circle cx="11" cy="21" r="10" fill="none" stroke="currentColor"/>
+      <path d="M11 11 L15 26 L11 23 L7 26 Z" fill="currentColor"/>
+      <text x="11" y="7" text-anchor="middle" font-size="7" font-family="monospace" fill="currentColor">N</text>
+    </svg>
+  </div>
+</header>
+
+<section class="about">
+  <!-- replace the box with <img src="images/portrait.jpg" alt="[Alt text]"> -->
+  <div class="portrait"><div class="box">[Portrait]</div></div>
+  <div>
+    <p>[Bio paragraph]</p>
+    <div class="links small">
+      <a href="mailto:[email]">[Email]</a>
+      <a href="cv.pdf">[CV]</a>
+      <a href="[LinkedIn URL]">[LinkedIn]</a>
+      <a href="[Instagram URL]">[Instagram]</a>
+    </div>
+  </div>
+</section>
+
+<h2 id="projects">Projects <span class="bubble" aria-hidden="true">A</span></h2>
+<p class="key small"><span><span class="bullet">U</span>Urban design</span> <span><span class="bullet">B</span>Build</span> <span><span class="bullet">M</span>Mapping</span> <span><span class="bullet">3</span>3D model</span></p>
+
+<!--
+  To add a project, copy one <li> block.
+  Swap each <div class="box"> for <img src="images/..." alt="...">.
+  To let a picture open full size, wrap it: <a href="images/big.jpg"><img ...></a>
+  Bullet letters: U urban design, B build, M mapping, 3 3D model.
+-->
+<ul class="route">
+  <li>
+    <details>
+      <summary>
+        <img src="images/shopping-cart/thumb.jpg" alt="">
+        <span><b>Shopping Cart Garden</b><span class="desc">Low-cost mobile gardens bringing fresh food to local communities that lack access</span></span>
+        <span class="small place"><span class="bullet">B</span>New York City</span>
+        <span class="small year">2026</span>
+      </summary>
+      <div>
+        <p>Go Gardens! is a social enterprise solution that empowers and equips local communities to feed and nourish themselves with fresh, healthy, and affordable produce through portable shopping cart gardens, giving people greater control over their own food production.</p>
+        <dl class="facts small">
+          <div><dt>Role</dt><dd>[ ]</dd></div>
+          <div><dt>Location</dt><dd>New York City</dd></div>
+          <div><dt>Year</dt><dd>2026</dd></div>
+          <div><dt>Program</dt><dd>Harvard Crimson Business Competition, Food Insecurity Challenge</dd></div>
+        </dl>
+        <p class="links small"><a href="files/go-gardens.pdf">Go Gardens! deck (PDF)</a></p>
+        <div class="pics">
+          <figure><a href="images/shopping-cart/1.jpg"><img src="images/shopping-cart/1.jpg" alt="Taking apart a discarded shopping cart" loading="lazy"></a><figcaption class="small">[Caption]</figcaption></figure>
+          <figure><a href="images/shopping-cart/2.jpg"><img src="images/shopping-cart/2.jpg" alt="Filling the cart with soil" loading="lazy"></a><figcaption class="small">[Caption]</figcaption></figure>
+          <figure><a href="images/shopping-cart/3.jpg"><img src="images/shopping-cart/3.jpg" alt="Go Gardens! title slide" loading="lazy"></a><figcaption class="small">Go Gardens! deck</figcaption></figure>
+          <figure><a href="images/shopping-cart/4.jpg"><img src="images/shopping-cart/4.jpg" alt="Design slide labeling the cart garden parts" loading="lazy"></a><figcaption class="small">Design</figcaption></figure>
+          <figure><a href="images/shopping-cart/5.jpg"><img src="images/shopping-cart/5.jpg" alt="Implementing Go Gardens! slide" loading="lazy"></a><figcaption class="small">Implementing Go Gardens!</figcaption></figure>
+          <figure><a href="images/shopping-cart/6.jpg"><img src="images/shopping-cart/6.jpg" alt="Three logo sketches of a shopping cart with a leaf" loading="lazy"></a><figcaption class="small">Logo sketches</figcaption></figure>
+        </div>
+      </div>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <img src="images/embarc/thumb.jpg" alt="">
+        <span><b>embARC</b><span class="desc">[One-line description]</span></span>
+        <span class="small place"><span class="bullet">U</span>Berkeley, CA</span>
+        <span class="small year">2025</span>
+      </summary>
+      <div>
+        <p>[Short intro]</p>
+        <p class="small">Final project, Community Development</p>
+        <p>My pavilion is a circular structure that was designed to exemplify community development. The pavilion, inspired by my two abstractions of growth and spikes, shows the harsh reality of the life of an egg, as an embodiment of modern-day society: humans grow up only to be engulfed by societal norms, losing their individuality. My pavilion promotes community engagement by allowing people of all ages and abilities to enjoy amenities such as a bonfire pit, an accessibility ramp, benches, and an open field, in order to escape from society, work, classes, stress, and the world of conformity and enjoy the moment. The open field around the main structure encircled by bushes, juxtaposes a natural escape to the bustling city of Berkeley.</p>
+        <dl class="facts small">
+          <div><dt>Role</dt><dd>[ ]</dd></div>
+          <div><dt>Location</dt><dd>Berkeley, CA</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+          <div><dt>Tools</dt><dd>Rhino 8, Adobe Illustrator</dd></div>
+        </dl>
+        <div class="pics">
+          <figure><a href="images/embarc/1.jpg"><img src="images/embarc/1.jpg" alt="Pavilion site model with trees" loading="lazy"></a><figcaption class="small">Final project: pavilion model</figcaption></figure>
+          <figure><a href="images/embarc/2.jpg"><img src="images/embarc/2.jpg" alt="Pavilion site model from above" loading="lazy"></a><figcaption class="small">Final project: plan view</figcaption></figure>
+          <figure><a href="images/embarc/3.jpg"><img src="images/embarc/3.jpg" alt="Pencil drawing titled Growth" loading="lazy"></a><figcaption class="small">Final project: Growth</figcaption></figure>
+          <figure><a href="images/embarc/4.jpg"><img src="images/embarc/4.jpg" alt="Pavilion plan drawing" loading="lazy"></a><figcaption class="small">Final project: pavilion plan</figcaption></figure>
+          <figure><a href="images/embarc/5.jpg"><img src="images/embarc/5.jpg" alt="Map redesign and three street sections of Berkeley" loading="lazy"></a><figcaption class="small">Map redesign and street sections</figcaption></figure>
+          <figure><a href="images/embarc/6.jpg"><img src="images/embarc/6.jpg" alt="Hand-drawn site mapping sketch" loading="lazy"></a><figcaption class="small">Site mapping</figcaption></figure>
+          <figure><a href="images/embarc/7.jpg"><img src="images/embarc/7.jpg" alt="Five views of a 3D modeled folly" loading="lazy"></a><figcaption class="small">3D folly, modeled in Rhino 8</figcaption></figure>
+          <figure><a href="images/embarc/8.jpg"><img src="images/embarc/8.jpg" alt="Colored render of the folly" loading="lazy"></a><figcaption class="small">3D folly render</figcaption></figure>
+          <figure><a href="images/embarc/9.jpg"><img src="images/embarc/9.jpg" alt="Section drawing of a small house" loading="lazy"></a><figcaption class="small">3D house: section</figcaption></figure>
+          <figure><a href="images/embarc/10.jpg"><img src="images/embarc/10.jpg" alt="Plan drawings of a small house" loading="lazy"></a><figcaption class="small">3D house: plans</figcaption></figure>
+          <figure><a href="images/embarc/11.jpg"><img src="images/embarc/11.jpg" alt="Red and yellow origami form" loading="lazy"></a><figcaption class="small">Origami</figcaption></figure>
+          <figure><a href="images/embarc/12.jpg"><img src="images/embarc/12.jpg" alt="Pencil drawing of a cactus and cloud" loading="lazy"></a><figcaption class="small">Cactus drawing</figcaption></figure>
+          <figure><a href="images/embarc/13.jpg"><img src="images/embarc/13.jpg" alt="Abstract line drawing labeled Spikey" loading="lazy"></a><figcaption class="small">Spikey</figcaption></figure>
+          <figure><a href="images/embarc/14.jpg"><img src="images/embarc/14.jpg" alt="Redwood table" loading="lazy"></a><figcaption class="small">Table build</figcaption></figure>
+          <figure><a href="images/embarc/15.jpg"><img src="images/embarc/15.jpg" alt="Two redwood tables in a parking lot" loading="lazy"></a><figcaption class="small">Table build</figcaption></figure>
+        </div>
+      </div>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <img src="images/design-lab/thumb.jpg" alt="">
+        <span><b>Design Lab</b><span class="desc">[One-line description]</span></span>
+        <span class="small place"><span class="bullet">B</span>[Place]</span>
+        <span class="small year">2025</span>
+      </summary>
+      <div>
+        <p>[Blurb]</p>
+        <dl class="facts small">
+          <div><dt>Role</dt><dd>[ ]</dd></div>
+          <div><dt>Location</dt><dd>[ ]</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+          <div><dt>Type</dt><dd>[ ]</dd></div>
+        </dl>
+        <div class="pics">
+          <figure><a href="images/design-lab/1.jpg"><img src="images/design-lab/1.jpg" alt="Working at a shop bench" loading="lazy"></a><figcaption class="small">[Caption]</figcaption></figure>
+          <figure><a href="images/design-lab/2.jpg"><img src="images/design-lab/2.jpg" alt="Cutting wood on a band saw" loading="lazy"></a><figcaption class="small">[Caption]</figcaption></figure>
+          <figure><a href="images/design-lab/3.jpg"><img src="images/design-lab/3.jpg" alt="Metal raised garden bed" loading="lazy"></a><figcaption class="small">Community garden</figcaption></figure>
+          <figure><a href="images/design-lab/4.jpg"><img src="images/design-lab/4.jpg" alt="Raised garden bed" loading="lazy"></a><figcaption class="small">Community garden</figcaption></figure>
+          <figure><a href="images/design-lab/5.jpg"><img src="images/design-lab/5.jpg" alt="Wooden planter with red flowers on a rooftop" loading="lazy"></a><figcaption class="small">Planter</figcaption></figure>
+          <figure><a href="images/design-lab/6.jpg"><img src="images/design-lab/6.jpg" alt="Wooden planter on a rooftop" loading="lazy"></a><figcaption class="small">Planter</figcaption></figure>
+        </div>
+      </div>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <img src="images/shipping-container/thumb.jpg" alt="">
+        <span><b>Shipping Container</b><span class="desc">[One-line description]</span></span>
+        <span class="small place"><span class="bullet">3</span>[Place]</span>
+        <span class="small year">2024–26</span>
+      </summary>
+      <div>
+        <p>[Blurb]</p>
+        <dl class="facts small">
+          <div><dt>Role</dt><dd>[ ]</dd></div>
+          <div><dt>Location</dt><dd>[ ]</dd></div>
+          <div><dt>Year</dt><dd>2024–2026</dd></div>
+          <div><dt>Type</dt><dd>Cargotecture</dd></div>
+        </dl>
+        <div class="pics">
+          <figure><a href="images/shipping-container/2.jpg"><img src="images/shipping-container/2.jpg" alt="Case study slide on Keetwonen Container City, Amsterdam" loading="lazy"></a><figcaption class="small">Case study: Keetwonen Container City, Amsterdam</figcaption></figure>
+          <figure><a href="images/shipping-container/3.jpg"><img src="images/shipping-container/3.jpg" alt="Floor plan of a 20 foot shipping container home" loading="lazy"></a><figcaption class="small">20 ft container plan</figcaption></figure>
+          <figure><a href="images/shipping-container/4.jpg"><img src="images/shipping-container/4.jpg" alt="Floor plan with circulation arrows" loading="lazy"></a><figcaption class="small">Floor plan and circulation</figcaption></figure>
+          <figure><a href="images/shipping-container/5.jpg"><img src="images/shipping-container/5.jpg" alt="Aerial site plan" loading="lazy"></a><figcaption class="small">Site plan</figcaption></figure>
+          <figure><a href="images/shipping-container/6.jpg"><img src="images/shipping-container/6.jpg" alt="Hand-drawn exterior elevation with materials list" loading="lazy"></a><figcaption class="small">Exterior elevation</figcaption></figure>
+          <figure><a href="images/shipping-container/7.jpg"><img src="images/shipping-container/7.jpg" alt="Interior views of a play area and a library" loading="lazy"></a><figcaption class="small">Interior views</figcaption></figure>
+          <figure><a href="images/shipping-container/8.jpg"><img src="images/shipping-container/8.jpg" alt="Exterior model" loading="lazy"></a><figcaption class="small">Exterior model</figcaption></figure>
+          <figure><a href="images/shipping-container/1.jpg"><img src="images/shipping-container/1.jpg" alt="3D model of a shipping container tiny home, cut away" loading="lazy"></a><figcaption class="small">Tiny home: 3D model</figcaption></figure>
+          <figure><a href="images/shipping-container/10.jpg"><img src="images/shipping-container/10.jpg" alt="Top view of the tiny home model" loading="lazy"></a><figcaption class="small">Tiny home: top view</figcaption></figure>
+          <figure><a href="images/shipping-container/11.jpg"><img src="images/shipping-container/11.jpg" alt="Title slide: Tiny Homes Villages Case Studies" loading="lazy"></a><figcaption class="small">Tiny Homes Villages Case Studies, Humanities Night</figcaption></figure>
+        </div>
+      </div>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <img src="images/gis-maps/thumb.jpg" alt="">
+        <span><b>GIS Maps</b><span class="desc">[One-line description]</span></span>
+        <span class="small place"><span class="bullet">M</span>Atlantic City · Mt. Whitney</span>
+        <span class="small year">2024</span>
+      </summary>
+      <div>
+        <p>[Blurb]</p>
+        <dl class="facts small">
+          <div><dt>Role</dt><dd>Cartography</dd></div>
+          <div><dt>Location</dt><dd>Atlantic City, NJ; Mt. Whitney, CA</dd></div>
+          <div><dt>Year</dt><dd>2024</dd></div>
+          <div><dt>Tools</dt><dd>QGIS</dd></div>
+        </dl>
+        <div class="pics">
+          <figure><a href="images/gis-maps/1.jpg"><img src="images/gis-maps/1.jpg" alt="Map of projected sea level rise for Atlantic City" loading="lazy"></a><figcaption class="small">Projected Sea Level Rise for Atlantic City, New Jersey</figcaption></figure>
+          <figure><a href="images/gis-maps/2.jpg"><img src="images/gis-maps/2.jpg" alt="Elevation map of Mt. Whitney" loading="lazy"></a><figcaption class="small">Elevation Map of Mt. Whitney</figcaption></figure>
+        </div>
+      </div>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <img src="images/3d-prints/thumb.jpg" alt="">
+        <span><b>3D Prints</b><span class="desc">[One-line description]</span></span>
+        <span class="small place"><span class="bullet">3</span>[Place]</span>
+        <span class="small year">2025</span>
+      </summary>
+      <div>
+        <p>[Blurb]</p>
+        <dl class="facts small">
+          <div><dt>Role</dt><dd>[ ]</dd></div>
+          <div><dt>Location</dt><dd>[ ]</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+          <div><dt>Type</dt><dd>[ ]</dd></div>
+        </dl>
+        <div class="pics">
+          <figure><a href="images/3d-prints/1.jpg"><img src="images/3d-prints/1.jpg" alt="3D printed piece" loading="lazy"></a><figcaption class="small">[Caption]</figcaption></figure>
+          <figure><a href="images/3d-prints/2.jpg"><img src="images/3d-prints/2.jpg" alt="3D printed piece" loading="lazy"></a><figcaption class="small">[Caption]</figcaption></figure>
+        </div>
+      </div>
+    </details>
+  </li>
+</ul>
+
+<h2 id="research">Research <span class="bubble" aria-hidden="true">B</span></h2>
+<ul class="route">
+  <li>
+    <details>
+      <summary>
+        <div class="box">[Thumb]</div>
+        <span><b>[Research title]</b><span class="desc">[One-line description]</span></span>
+        <span class="small place"><span class="bullet">M</span>[Place]</span>
+        <span class="small year">[Year]</span>
+      </summary>
+      <div>
+        <p>[Blurb]</p>
+        <dl class="facts small">
+          <div><dt>Role</dt><dd>[ ]</dd></div>
+          <div><dt>Location</dt><dd>[ ]</dd></div>
+          <div><dt>Year</dt><dd>[ ]</dd></div>
+          <div><dt>Type</dt><dd>[ ]</dd></div>
+        </dl>
+        <p class="links small"><a href="#">[Link label]</a></p>
+        <div class="pics">
+          <div class="box">[Map]</div>
+          <div class="box">[Diagram]</div>
+        </div>
+      </div>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <div class="box">[Thumb]</div>
+        <span><b>[Research title]</b><span class="desc">[One-line description]</span></span>
+        <span class="small place"><span class="bullet">U</span>[Place]</span>
+        <span class="small year">[Year]</span>
+      </summary>
+      <div>
+        <p>[Blurb]</p>
+        <dl class="facts small">
+          <div><dt>Role</dt><dd>[ ]</dd></div>
+          <div><dt>Location</dt><dd>[ ]</dd></div>
+          <div><dt>Year</dt><dd>[ ]</dd></div>
+          <div><dt>Type</dt><dd>[ ]</dd></div>
+        </dl>
+        <div class="pics">
+          <div class="box">[Map]</div>
+        </div>
+      </div>
+    </details>
+  </li>
+</ul>
+
+<svg class="terminal" viewBox="0 0 600 100" fill="none" stroke="currentColor" stroke-width="5" aria-hidden="true">
+    <path d="M600 36 H90 M600 48 H90 M600 60 H90"/>
+    <path d="M82 22 V74" stroke-width="6"/>
+    <path d="M280 33 V23 M440 33 V23" stroke-width="4"/>
+  </svg>
+
+<section class="contact" id="contact">
+  <p class="small">Contact</p>
+  <a class="email" href="mailto:[email]">[Email]</a>
+  <div class="links small">
+    <a href="cv.pdf">[CV]</a>
+    <a href="[LinkedIn URL]">[LinkedIn]</a>
+    <a href="[Instagram URL]">[Instagram]</a>
+  </div>
+</section>
+
+<footer class="small">
+  <span>Arjun Kothari, 2026</span>
+  <svg width="120" height="22" viewBox="0 0 120 22" aria-hidden="true">
+    <rect x="0.5" y="0.5" width="110" height="5" fill="none" stroke="#2c5694"/>
+    <rect x="0.5" y="0.5" width="27.5" height="5" fill="#2c5694"/>
+    <rect x="55.5" y="0.5" width="27.5" height="5" fill="#2c5694"/>
+    <text x="0" y="18" font-size="8" font-family="monospace" fill="#2c5694">0</text>
+    <text x="53" y="18" font-size="8" font-family="monospace" fill="#2c5694">5</text>
+    <text x="100" y="18" font-size="8" font-family="monospace" fill="#2c5694">10m</text>
+  </svg>
+</footer>
+
+</body>
+</html>
