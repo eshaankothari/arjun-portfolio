@@ -85,6 +85,32 @@
   .thumb { flex: none; width: 168px; height: 126px; object-fit: cover; margin-top: 0.2rem; }
   .box { display: grid; place-items: center; background: #e8e7e2; font: 0.7rem var(--sans); color: var(--faint); }
 
+  /* the two main projects: full-width image on top, larger title */
+  .entry.big summary { flex-direction: column-reverse; gap: 1rem; }
+  .entry.big summary > div:not(.thumb) { width: 100%; }
+  .entry.big .thumb { width: 100%; height: auto; aspect-ratio: 16 / 9; margin: 0; }
+  #shopping-cart .thumb { object-position: 50% 15%; }
+  .entry.big h3 { font-size: 1.6rem; }
+  .entry.big .role { font-size: 1.1rem; }
+
+  /* the two highlighted projects sit side by side; an opened one takes the full width */
+  .pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 1.6rem; }
+  .pair .entry.big .thumb { aspect-ratio: 4 / 3; }
+  .pair .entry.big h3 { font-size: 1.4rem; }
+  /* both cards stay side by side; an opened one expands straight down in its own column */
+  .pair { align-items: start; border-bottom: 1px solid var(--rule); margin-bottom: 1.6rem; }
+  .pair .entry { border-bottom: none; margin-bottom: 0; }
+  .pair .role { min-height: 3.3em; }
+  /* show which card is open: a navy bar under it, and the other card fades back */
+  .pair summary { padding-bottom: 1rem; border-bottom: 2px solid transparent; }
+  .pair .entry[open] summary { border-bottom-color: var(--accent); }
+  .pair .entry[open] h3 { color: var(--accent); }
+  .pair:has(.entry[open]) .entry:not([open]) summary { opacity: 0.45; }
+  .pair:has(.entry[open]) .entry:not([open]) summary:hover { opacity: 1; }
+  /* one open at a time (name="highlight"); its details stretch across both columns so the photos get the full width */
+  .pair .entry:first-child[open] .more { margin-right: calc(-100% - 1.6rem); }
+  .pair .entry:last-child[open] .more { margin-left: calc(-100% - 1.6rem); }
+
   .more { padding-top: 1.2rem; }
   .more > p { margin: 0 0 0.9rem; }
   .more .small, .facts { font: 0.8rem/1.5 var(--sans); color: var(--muted); }
@@ -102,6 +128,9 @@
   footer { display: flex; justify-content: space-between; align-items: center; margin: 0 auto; padding: 1.4rem 1.5rem 2.4rem; max-width: 54rem; border-top: 1px solid var(--rule); font: 0.75rem var(--sans); color: var(--faint); }
 
   @media (max-width: 620px) {
+    .pair { grid-template-columns: 1fr; }
+    .pair .entry[open] .more { margin: 0; }
+    .pair .role { min-height: 0; }
     body { font-size: 18px; }
     .portrait { float: none; margin: 0 0 1.6rem; width: 160px; height: 196px; }
     h1 { font-size: 2.2rem; }
@@ -149,14 +178,15 @@
   To add a project, copy one <details class="entry"> block.
   Pictures go in images/<project>/ ; each <figure> links to the full-size file.
 -->
-<details class="entry">
+<div class="pair">
+<details class="entry big" id="shopping-cart" name="highlight">
   <summary>
     <div>
       <div class="head"><h3>Shopping Cart Garden</h3><span class="when">2026</span></div>
       <p class="role">Low-cost mobile gardens bringing fresh food to local communities that lack access</p>
       <p class="tags"><span>New York City</span><span>Build</span></p>
     </div>
-    <img class="thumb" src="images/shopping-cart/thumb.jpg" alt="">
+    <img class="thumb" src="images/shopping-cart/feature.jpg" alt="">
   </summary>
   <div class="more">
       <p>Go Gardens! is a social enterprise solution that empowers and equips local communities to feed and nourish themselves with fresh, healthy, and affordable produce through portable shopping cart gardens, giving people greater control over their own food production.</p>
@@ -177,6 +207,38 @@
       </div>
   </div>
 </details>
+<details class="entry big" id="shipping-container" name="highlight">
+  <summary>
+    <div>
+      <div class="head"><h3>Shipping Container</h3><span class="when">2024–26</span></div>
+      <p class="role">[One-line description]</p>
+      <p class="tags"><span>[Place]</span><span>3D model</span></p>
+    </div>
+    <img class="thumb" src="images/shipping-container/feature.jpg" alt="">
+  </summary>
+  <div class="more">
+      <p>[Blurb]</p>
+      <dl class="facts small">
+        <div><dt>Role</dt><dd>[ ]</dd></div>
+        <div><dt>Location</dt><dd>[ ]</dd></div>
+        <div><dt>Year</dt><dd>2024–2026</dd></div>
+        <div><dt>Type</dt><dd>Cargotecture</dd></div>
+      </dl>
+      <div class="pics">
+        <figure><a href="images/shipping-container/2.jpg"><img src="images/shipping-container/2.jpg" alt="Case study slide on Keetwonen Container City, Amsterdam" loading="lazy"></a><figcaption class="small">Case study: Keetwonen Container City, Amsterdam</figcaption></figure>
+        <figure><a href="images/shipping-container/3.jpg"><img src="images/shipping-container/3.jpg" alt="Floor plan of a 20 foot shipping container home" loading="lazy"></a><figcaption class="small">20 ft container plan</figcaption></figure>
+        <figure><a href="images/shipping-container/4.jpg"><img src="images/shipping-container/4.jpg" alt="Floor plan with circulation arrows" loading="lazy"></a><figcaption class="small">Floor plan and circulation</figcaption></figure>
+        <figure><a href="images/shipping-container/5.jpg"><img src="images/shipping-container/5.jpg" alt="Aerial site plan" loading="lazy"></a><figcaption class="small">Site plan</figcaption></figure>
+        <figure><a href="images/shipping-container/6.jpg"><img src="images/shipping-container/6.jpg" alt="Hand-drawn exterior elevation with materials list" loading="lazy"></a><figcaption class="small">Exterior elevation</figcaption></figure>
+        <figure><a href="images/shipping-container/7.jpg"><img src="images/shipping-container/7.jpg" alt="Interior views of a play area and a library" loading="lazy"></a><figcaption class="small">Interior views</figcaption></figure>
+        <figure><a href="images/shipping-container/8.jpg"><img src="images/shipping-container/8.jpg" alt="Exterior model" loading="lazy"></a><figcaption class="small">Exterior model</figcaption></figure>
+        <figure><a href="images/shipping-container/1.jpg"><img src="images/shipping-container/1.jpg" alt="3D model of a shipping container tiny home, cut away" loading="lazy"></a><figcaption class="small">Tiny home: 3D model</figcaption></figure>
+        <figure><a href="images/shipping-container/10.jpg"><img src="images/shipping-container/10.jpg" alt="Top view of the tiny home model" loading="lazy"></a><figcaption class="small">Tiny home: top view</figcaption></figure>
+        <figure><a href="images/shipping-container/11.jpg"><img src="images/shipping-container/11.jpg" alt="Title slide: Tiny Homes Villages Case Studies" loading="lazy"></a><figcaption class="small">Tiny Homes Villages Case Studies, Humanities Night</figcaption></figure>
+      </div>
+  </div>
+</details>
+</div>
 <details class="entry">
   <summary>
     <div>
@@ -239,37 +301,6 @@
         <figure><a href="images/design-lab/4.jpg"><img src="images/design-lab/4.jpg" alt="Raised garden bed" loading="lazy"></a><figcaption class="small">Community garden</figcaption></figure>
         <figure><a href="images/design-lab/5.jpg"><img src="images/design-lab/5.jpg" alt="Wooden planter with red flowers on a rooftop" loading="lazy"></a><figcaption class="small">Planter</figcaption></figure>
         <figure><a href="images/design-lab/6.jpg"><img src="images/design-lab/6.jpg" alt="Wooden planter on a rooftop" loading="lazy"></a><figcaption class="small">Planter</figcaption></figure>
-      </div>
-  </div>
-</details>
-<details class="entry">
-  <summary>
-    <div>
-      <div class="head"><h3>Shipping Container</h3><span class="when">2024–26</span></div>
-      <p class="role">[One-line description]</p>
-      <p class="tags"><span>[Place]</span><span>3D model</span></p>
-    </div>
-    <img class="thumb" src="images/shipping-container/thumb.jpg" alt="">
-  </summary>
-  <div class="more">
-      <p>[Blurb]</p>
-      <dl class="facts small">
-        <div><dt>Role</dt><dd>[ ]</dd></div>
-        <div><dt>Location</dt><dd>[ ]</dd></div>
-        <div><dt>Year</dt><dd>2024–2026</dd></div>
-        <div><dt>Type</dt><dd>Cargotecture</dd></div>
-      </dl>
-      <div class="pics">
-        <figure><a href="images/shipping-container/2.jpg"><img src="images/shipping-container/2.jpg" alt="Case study slide on Keetwonen Container City, Amsterdam" loading="lazy"></a><figcaption class="small">Case study: Keetwonen Container City, Amsterdam</figcaption></figure>
-        <figure><a href="images/shipping-container/3.jpg"><img src="images/shipping-container/3.jpg" alt="Floor plan of a 20 foot shipping container home" loading="lazy"></a><figcaption class="small">20 ft container plan</figcaption></figure>
-        <figure><a href="images/shipping-container/4.jpg"><img src="images/shipping-container/4.jpg" alt="Floor plan with circulation arrows" loading="lazy"></a><figcaption class="small">Floor plan and circulation</figcaption></figure>
-        <figure><a href="images/shipping-container/5.jpg"><img src="images/shipping-container/5.jpg" alt="Aerial site plan" loading="lazy"></a><figcaption class="small">Site plan</figcaption></figure>
-        <figure><a href="images/shipping-container/6.jpg"><img src="images/shipping-container/6.jpg" alt="Hand-drawn exterior elevation with materials list" loading="lazy"></a><figcaption class="small">Exterior elevation</figcaption></figure>
-        <figure><a href="images/shipping-container/7.jpg"><img src="images/shipping-container/7.jpg" alt="Interior views of a play area and a library" loading="lazy"></a><figcaption class="small">Interior views</figcaption></figure>
-        <figure><a href="images/shipping-container/8.jpg"><img src="images/shipping-container/8.jpg" alt="Exterior model" loading="lazy"></a><figcaption class="small">Exterior model</figcaption></figure>
-        <figure><a href="images/shipping-container/1.jpg"><img src="images/shipping-container/1.jpg" alt="3D model of a shipping container tiny home, cut away" loading="lazy"></a><figcaption class="small">Tiny home: 3D model</figcaption></figure>
-        <figure><a href="images/shipping-container/10.jpg"><img src="images/shipping-container/10.jpg" alt="Top view of the tiny home model" loading="lazy"></a><figcaption class="small">Tiny home: top view</figcaption></figure>
-        <figure><a href="images/shipping-container/11.jpg"><img src="images/shipping-container/11.jpg" alt="Title slide: Tiny Homes Villages Case Studies" loading="lazy"></a><figcaption class="small">Tiny Homes Villages Case Studies, Humanities Night</figcaption></figure>
       </div>
   </div>
 </details>
